@@ -22,13 +22,23 @@ const sendEmail = async (req, res) => {
   const domain = 'mg.thepipeline.xyz'
   const client_id = req.body.client_id
   var mailgun = new Mailgun({apiKey: api_key, domain: domain});
-  const telegram_api = `https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}`
+  // const telegram_api = `https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}`
 
   const clients = [
     {
       id: process.env.CLIENT_ID_TOMAS,
       name: 'tomas',
       email: process.env.CLIENT_EMAIL_TOMAS
+    },
+    {
+      id: process.env.CLIENT_ID_VICUNIA,
+      name: 'vicunia',
+      email: process.env.CLIENT_EMAIL_VICUNIA
+    },
+    {
+      id: process.env.CLIENT_ID_SIGNOSALMICOS,
+      name: 'signosalmicos',
+      email: process.env.CLIENT_EMAIL_SIGNOSALMICOS
     },
     {
       id: process.env.CLIENT_ID_QUALIS,
@@ -55,7 +65,7 @@ const sendEmail = async (req, res) => {
     Nombre: ${req.body.name}<br>
     Email: ${req.body.email}<br>
     Phone: ${req.body.phone}<br>
-    Mensaje: ${req.body.message}<br>
+    Mensaje: ${req.body.country ? 'Desde ' + req.body.country : '' } ${req.body.message}<br>
     <br>
     <hr>
     <p>Sended with love from
@@ -68,14 +78,14 @@ const sendEmail = async (req, res) => {
     `,
   }
 
-  const sendTelegram = async() => {
-    await axios.post(`${telegram_api}/sendMessage`, {
-      chat_id: telegram_chat_id,
-      text: `thepipeline\nto: ${getClientEmail(client_id)}`
-    })
-  }
+  // const sendTelegram = async() => {
+  //   await axios.post(`${telegram_api}/sendMessage`, {
+  //     chat_id: telegram_chat_id,
+  //     text: `thepipeline\nto: ${getClientEmail(client_id)}`
+  //   })
+  // }
 
-  await sendTelegram()  
+  // await sendTelegram()  
 
   await mailgun.messages().send(mailOptions, function (err, body) {
     if (err) {
